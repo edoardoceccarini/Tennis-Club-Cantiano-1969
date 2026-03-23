@@ -130,11 +130,13 @@ export function CalendarView({
                         fontWeight: 500, opacity: isStarted ? 0.4 : 1,
                       }}>
                         <span style={{ fontSize: 8, opacity: 0.65, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                          {colors.label}
-                        </span>
-                        <span style={{ marginTop: 1, fontWeight: 600, fontSize: 10 }}>
-                          {displayName}
-                        </span>
+                            {colors.label}
+                          </span>
+                          {booking.booking_type === 'normal' && (
+                            <span style={{ marginTop: 1, fontWeight: 600, fontSize: 10 }}>
+                              {displayName}
+                            </span>
+                          )}
                       </div>
                     );
                   }

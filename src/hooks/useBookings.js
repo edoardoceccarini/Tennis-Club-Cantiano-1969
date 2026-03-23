@@ -138,12 +138,54 @@ const rowsWithUser = rows.map((r) => ({
     return data; // Per contare quante ne ha cancellate
   }, [load]);
 
+  /**
+   * Carica prenotazioni in un range di date.
+   * Se from/to sono null, non filtra in quella direzione.
+   * Usato dall'admin per lo storico.
+   */
+  const loadRange = useCallback(async (from, to) => {
+    let query = supabase
+      .from('bookings')
+      .select(`
+        id,
+        court_id,
+        user_id,
+        start_time,
+        end_time,
+        booking_type,
+        booked_by,
+        created_at,
+        profiles ( display_name )
+      `)
+      .order('start_time', { ascending: false });
+
+    if (from) {
+      query = query.gte('start_time', from.toISOString());
+    }
+    if (to) {
+      var toEnd = new Date(to);
+      toEnd.setHours(23, 59, 59, 999);
+      query = query.lte('start_time', toEnd.toISOString());
+    }
+
+    var { data, error } = await query;
+    if (error) throw error;
+
+    return (data || []).map(function(b) {
+      return {
+        ...parseBooking(b),
+        user_name: b.booked_by || b.profiles?.display_name || 'Utente rimosso',
+      };
+    });
+  }, []);
+
   return {
     bookings,
     loading,
     createBookings,
     cancelBooking,
     cancelAllForCourt,
+    loadRange,
     reload: load,
   };
 }

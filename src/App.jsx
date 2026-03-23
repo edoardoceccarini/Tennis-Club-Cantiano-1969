@@ -19,7 +19,7 @@ import { PrivacyScreen } from './views/PrivacyScreen';
 export default function App() {
   const { user, loading: authLoading, needsName, sendMagicLink, updateDisplayName, logout } = useAuth();
   const { courts, createCourt, updateCourt, toggleAvailability, deleteCourt } = useCourts();
-  const { bookings, createBookings, cancelBooking, cancelAllForCourt } = useBookings();
+  const { bookings, createBookings, cancelBooking, cancelAllForCourt, loadRange} = useBookings();
   const { isMobile, isDesktop } = useResponsive();
 
   const isAdmin = user?.isAdmin || false;
@@ -327,7 +327,7 @@ export default function App() {
         )}
         {screen === 'mybookings' && isAdmin && (
           <AllBookingsView bookings={allFutureBookings} courts={courts}
-            onCancel={(id) => setConfirmCancelId(id)} />
+            onCancel={(id) => setConfirmCancelId(id)} loadRange={loadRange} />
         )}
         {screen === 'admin' && (
           <AdminView
