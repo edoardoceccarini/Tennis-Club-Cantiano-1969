@@ -207,7 +207,7 @@ export function CourtFormModal({ court, onSave, onClose }) {
         has_lighting: lit,
         is_indoor: ind,
       });
-    } catch {
+    } finally {
       setSaving(false);
     }
   }
